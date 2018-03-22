@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# $FreeBSD: head/net/zerotier/files/zerotier.in 454856 2017-11-24 23:17:50Z dbaio $
+#
+# PROVIDE: zerotier
+# REQUIRE: FILESYSTEMS cleanvar
+# BEFORE: kld
+# KEYWORD: shutdown
+#
+# Add these lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+# zerotier_enable (bool):       Set to NO by default.
+#                               Set it to YES to enable zerotier.
+
+. /etc/rc.subr
+
+name=zerotier
+rcvar=zerotier_enable
+
+pidfile="/var/db/${name}-one/${name}-one.pid"
+
+load_rc_config ${name}
+
+: ${zerotier_enable:="YES"}
+command="/usr/local/sbin/${name}-one"
+
+command_args="-d"
+
+run_rc_command "$1"

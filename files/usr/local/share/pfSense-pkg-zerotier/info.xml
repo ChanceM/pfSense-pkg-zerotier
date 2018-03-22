@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<pfsensepkgs>
+	<package>
+		<name>zerotier</name>
+		<website>https://www.zerotier.com</website>
+		<descr>
+			<![CDATA[Zerotier client package
+			]]>
+		</descr>
+		<pkginfolink>https://forum.pfsense.org/</pkginfolink>
+		<version>%%PKGVERSION%%</version>
+		<configurationfile>zerotier.xml</configurationfile>
+	</package>
+</pfsensepkgs>

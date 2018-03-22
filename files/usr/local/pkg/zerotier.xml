@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE packagegui SYSTEM "../schema/packages.dtd">
+<?xml-stylesheet type="text/xsl" href="../xsl/package.xsl"?>
+<packagegui>
+	<name>zerotier</name>
+	<title>Zerotier</title>
+	<include_file>/usr/local/pkg/zerotier.inc</include_file>
+	<menu>
+		<name>Zerotier</name>
+		<section>VPN</section>
+		<url>/zerotier.php</url>
+	</menu>
+	<service>
+		<name>zerotier</name>
+		<rcfile>zerotier</rcfile>
+		<executable>zerotier-one</executable>
+		<description>Zerotier Daemon</description>
+	</service>
+	<custom_php_global_functions></custom_php_global_functions>
+	<custom_php_install_command>
+		zerotier_install();
+	</custom_php_install_command>
+	<custom_php_deinstall_command>
+		zerotier_deinstall();
+	</custom_php_deinstall_command>
+	<custom_add_php_command></custom_add_php_command>
+	<custom_add_php_command_late></custom_add_php_command_late>
+	<custom_delete_php_command></custom_delete_php_command>
+	<custom_php_resync_config_command>
+		zerotier_sync();
+	</custom_php_resync_config_command>
+	<start_command>
+	</start_command>
+	<process_kill_command>
+		zerotier_kill();
+	</process_kill_command>
+</packagegui>
