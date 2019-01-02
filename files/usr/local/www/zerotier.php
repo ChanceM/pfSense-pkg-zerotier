@@ -39,28 +39,25 @@ if (!is_service_running("zerotier")) {
 if($_POST['save']) {
 
     if(isset($_POST['enable'])) {
-        $config['installedpackages']['zerotier']['config'][0]['enable'] = $_POST['enable'];
-    }
-    else {
-        unset($config['installedpackages']['zerotier']['config'][0]['enable']);
-    }
-
-    if(isset($_POST['enableExperimental'])) {
-        $config['installedpackages']['zerotier']['config'][0]['experimental'] = $_POST['enableExperimental'];
-    }
-    else {
-        unset($config['installedpackages']['zerotier']['config'][0]['experimental']);
-    }
-
-    write_config(gettext("Update enable Zerotier."));
-    if (!isset($_POST['enable'])) {
-        zerotier_kill();
-    }
-    else {
+        $config['installedpackages']['zerotier']['config'][0]['enable'] = true;
         if (!is_service_running("zerotier")) {
             start_service("zerotier");
         }
     }
+    else {
+        $config['installedpackages']['zerotier']['config'][0]['enable'] = false;
+        zerotier_kill();
+    }
+
+    if(isset($_POST['enableExperimental'])) {
+        $config['installedpackages']['zerotier']['config'][0]['experimental'] = true;
+    }
+    else {
+        $config['installedpackages']['zerotier']['config'][0]['experimental'] = false;
+    }
+
+    write_config(gettext("Update enable Zerotier."));
+ 
     header("Location: zerotier.php");
 }
 
