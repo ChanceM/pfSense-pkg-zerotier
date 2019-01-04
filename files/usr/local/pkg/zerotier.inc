@@ -24,8 +24,8 @@ function zerotier_sync() {
 function zerotier_install() {
 	global $config;
 
-	$config['installedpackages']['zerotier']['enabled'] = 'true';
-	$config['installedpackages']['zerotier']['experimental'] = 'true';
+	$config['installedpackages']['zerotier']['enabled'] = 'false';
+	$config['installedpackages']['zerotier']['experimental'] = 'false';
 
 	$zerotier = <<<EOD
 #!/bin/sh
