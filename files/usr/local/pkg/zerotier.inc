@@ -16,7 +16,7 @@ function zerotier_sync() {
 		stop_service("zerotier");
 	}
 
-	if (isset($config['installedpackages']['zerotier']['enabled'])) {
+	if ($config['installedpackages']['zerotier']['enabled'] == 'true') {
 		start_service("zerotier");
 	}
 }
@@ -24,7 +24,8 @@ function zerotier_sync() {
 function zerotier_install() {
 	global $config;
 
-	$config['installedpackages']['zerotier'] = [];
+	$config['installedpackages']['zerotier']['enabled'] = 'true';
+	$config['installedpackages']['zerotier']['experimental'] = 'true';
 
 	$zerotier = <<<EOD
 #!/bin/sh
@@ -94,7 +95,7 @@ function zerotier_kill() {
 }
 
 function zerotier_start() {
-	if (isset($config['installedpackages']['zerotier']['enabled'])) {
+	if ($config['installedpackages']['zerotier']['enabled'] == 'true') {
 		if (!is_service_running("zerotier")) {
 			start_service("zerotier");
 		}
