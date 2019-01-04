@@ -100,7 +100,7 @@ if ($_POST['save']) {
         $zerotier_network['routes'][] = ['target' => $route, 'via'=> NULL];
     }
 
-    if ($config['installedpackages']['zerotier']['config'][0]['experimental']) {
+    if (isset($config['installedpackages']['zerotier']['experimental'])) {
         $zerotier_network['allowPassiveBridging'] = $_POST['allowPassiveBridging'] == 'on' ? TRUE : FALSE;
     }
 
@@ -193,7 +193,7 @@ if ($act=="new" || $act=="edit"):
         'V6'
     ))->setHelp('To');
     $section->add($group);
-    if ($config['installedpackages']['zerotier']['config'][0]['experimental']) {
+    if (isset($config['installedpackages']['zerotier']['experimental'])) {
         $section->addInput(new Form_Checkbox(
             'allowPassiveBridging',
             'Allow Passive Bridging',
