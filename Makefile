@@ -7,8 +7,8 @@ MASTER_SITES=	# empty
 DISTFILES=	# empty
 EXTRACT_ONLY=	# empty
 
-MAINTAINER=	grmoore18@gmail.com
-COMMENT=	pfSense package zerotier
+MAINTAINER=	coreybrett@gmail.com
+COMMENT=	pfSense package for zerotier
 
 LICENSE=	APACHE20
 
@@ -38,10 +38,6 @@ do-install:
 	${INSTALL_DATA} ${FILESDIR}${PREFIX}/www/zerotier_networks.php \
 		${STAGEDIR}${PREFIX}/www
 	${INSTALL_DATA} ${FILESDIR}${PREFIX}/www/zerotier_peers.php \
-		${STAGEDIR}${PREFIX}/www
-	${INSTALL_DATA} ${FILESDIR}${PREFIX}/www/zerotier_controller.php \
-		${STAGEDIR}${PREFIX}/www
-		${INSTALL_DATA} ${FILESDIR}${PREFIX}/www/zerotier_controller_network.php \
 		${STAGEDIR}${PREFIX}/www
 	@${REINPLACE_CMD} -i '' -e "s|%%PKGVERSION%%|${PKGVERSION}|" \
 		${STAGEDIR}${DATADIR}/info.xml

@@ -27,7 +27,6 @@ require("head.inc");
 $tab_array = array();
 $tab_array[] = array(gettext("Networks"), false, "zerotier_networks.php");
 $tab_array[] = array(gettext("Peers"), false, "zerotier_peers.php");
-$tab_array[] = array(gettext("Controller"), false, "zerotier_controller.php");
 $tab_array[] = array(gettext("Configuration"), true, "zerotier.php");
 add_package_tabs("Zerotier", $tab_array);
 display_top_tabs($tab_array);

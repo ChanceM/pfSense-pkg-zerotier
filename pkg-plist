@@ -3,6 +3,4 @@ pkg/zerotier.inc
 www/zerotier.php
 www/zerotier_networks.php
 www/zerotier_peers.php
-www/zerotier_controller.php
-www/zerotier_controller_network.php
 %%DATADIR%%/info.xml

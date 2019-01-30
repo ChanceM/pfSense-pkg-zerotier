@@ -2,7 +2,7 @@
 pfSense package to support zerotier.
 
 ## Install
-1. Build [zerotier](https://github.com/zerotier/ZeroTierOne) dev branch.
+1. Install zerotier from ports.
 2. Copy these files and build on FreeBSD.
 3. SCP to pfSense
 4. Run `pkg add pfsense-pkg-zerotier-1.0.txz`
