@@ -12,9 +12,10 @@
 	</menu>
 	<service>
 		<name>zerotier</name>
-		<rcfile>zerotier</rcfile>
+		<rcfile>zerotier.sh</rcfile>
 		<executable>zerotier-one</executable>
 		<description>Zerotier Daemon</description>
+		<starts_on_sync>true</starts_on_sync>
 	</service>
 	<custom_php_global_functions></custom_php_global_functions>
 	<custom_php_install_command>

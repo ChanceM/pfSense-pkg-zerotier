@@ -53,7 +53,7 @@ display_top_tabs($tab_array);
 
 
 if (!is_service_running("zerotier")) {
-    print('<div class="alert alert-warning" role="alert"><strong>Zerotier</strong> service is not running.</div>');
+    print_info_box(gettext("The Zerotier service is not running."), "warning", false);
 }
 if ($act=="del") {
     $out = zerotier_controller_deletenetwork($_POST['Network']);

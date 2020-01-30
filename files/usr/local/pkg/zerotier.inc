@@ -2,70 +2,48 @@
 /*
 *
 */
+require_once("util.inc");
+require_once("globals.inc");
 require_once("config.inc");
 require_once("interfaces.inc");
-require_once("globals.inc");
 require_once("services.inc");
 require_once("service-utils.inc");
-require_once("util.inc");
 
 function zerotier_sync() {
 	global $config;
 
-	if (is_service_running("zerotier")) {
+	$zerotier_config = $config['installedpackages']['zerotier']['config'][0];
+
+	if(!($zerotier_config['enable'])) {
+		if(is_process_running("zerotier")) {
+			stop_service("zerotier");
+		}
+		return;
+	}
+
+	if(is_process_running("zerotier")) {
 		stop_service("zerotier");
 	}
 
-	if ($config['installedpackages']['zerotier']['config'][0]['enable']) {
-		start_service("zerotier");
-	}
+	start_service("zerotier");
 }
 
 function zerotier_install() {
 	global $config;
 
-	$config['installedpackages']['zerotier']['config'][0]['enable'] = 'yes';
+	if (!is_array($config['installedpackages']['zerotier'])) {
+		$config['installedpackages']['zerotier'] = array();
+	}
+	
+	if (!is_array($config['installedpackages']['zerotier']['config'])) {
+		$config['installedpackages']['zerotier']['config'] = array();
+	}
 
-	$zerotier = <<<EOD
-#!/bin/sh
+	$_rcfile['file'] = 'zerotier.sh';
+	$_rcfile['start'] = '/usr/local/sbin/zerotier-one -d';
+	$_rcfile['stop'] = '/usr/bin/killall -q zerotier-one';
 
-# $FreeBSD: head/net/zerotier/files/zerotier.in 454856 2017-11-24 23:17:50Z dbaio $
-#
-# PROVIDE: zerotier
-# REQUIRE: NETWORKING
-# BEFORE: SERVERS
-# KEYWORD: shutdown
-#
-# Add these lines to /etc/rc.conf.local or /etc/rc.conf
-# to enable this service:
-#
-# zerotier_enable (bool):       Set to NO by default.
-#                               Set it to YES to enable zerotier.
-
-. /etc/rc.subr
-
-name=zerotier
-rcvar=zerotier_enable
-
-pidfile="/var/db/\${name}-one/\${name}-one.pid"
-
-load_rc_config \${name}
-
-command="/usr/local/sbin/\${name}-one"
-
-command_args="-d"
-
-run_rc_command "$1"
-EOD;
-
-	$fd = fopen("/usr/local/etc/rc.d/zerotier", "w");
-	fwrite($fd, $zerotier);
-	fclose($fd);
-	chmod("/usr/local/etc/rc.d/zerotier", 0555);
-
-	$fd = fopen("/etc/rc.conf.local", "a");
-	fwrite($fd, "zerotier_enable=\"YES\"\n");
-	fclose($fd);
+	write_rcfile($_rcfile);
 
 	$file_contents = file_get_contents("/etc/inc/util.inc");
 	$file_contents = preg_replace('/(\^enc\|)/', "^zt|$1", $file_contents);
@@ -75,7 +53,14 @@ EOD;
 }
 
 function zerotier_deinstall() {
-	exec("killall zerotier-one");
+	global $config;
+
+	if(is_process_running("zerotier")) {
+		stop_service("zerotier");
+	}
+
+	unset($config['installedpackages']['zerotier']['config'][0]);
+	write_config("[zerotier] Package uninstalled.");
 
 	$file_contents = file_get_contents("/etc/rc.conf.local");
 	$file_contents = str_replace("zerotier_enable=\"YES\"\n","",$file_contents);
@@ -84,22 +69,36 @@ function zerotier_deinstall() {
 	$file_contents = file_get_contents("/etc/inc/util.inc");
 	$file_contents = preg_replace('/\^zt\|(\^enc\|)/', "$1", $file_contents);
 	file_put_contents("/etc/inc/util.inc", $file_contents);
+
+	unlink_if_exists('/usr/local/etc/rc.d/zerotier.sh');
 }
 
 function zerotier_kill() {
 	if (is_service_running("zerotier")) {
-		// stop_service("zerotier");
-		exec("killall zerotier-one");
+		stop_service("zerotier");
 	}
 }
 
 function zerotier_start() {
-	if (isset($config['installedpackages']['zerotier']['config'][0]['enable'])) {
+	global $config;
+	
+	if ($config['installedpackages']['zerotier']['config'][0]['enable'] == 'yes') {
 		if (!is_service_running("zerotier")) {
 			start_service("zerotier");
 		}
 	}
 }
+
+function zerotier_status() {
+	$output = [];
+	if (is_service_running("zerotier"))
+	{
+		exec("/usr/local/bin/zerotier-cli -j /status", $json);
+		$output = json_decode(implode('', $json));
+	}
+	return $output;
+}
+
 
 # Used by Status Page
 function zerotier_listnetworks() {
@@ -193,7 +192,7 @@ function zerotier_controller_createnetwork($network, $networkID) {
 		exec("/usr/local/bin/zerotier-cli -j /status", $json);
 		$status = json_decode(implode('', $json));
 		$controller_id = $status->address;
-		$network_id = $controller_id.$networkID;
+		$network_id = $controller_id.networkID;
 		$post_data = json_encode($network);
 		$curl = curl_init("http://localhost:9993/controller/network/".$network_id);
 		curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");

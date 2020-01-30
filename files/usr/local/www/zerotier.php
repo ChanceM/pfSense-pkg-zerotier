@@ -32,40 +32,60 @@ $tab_array[] = array(gettext("Configuration"), true, "zerotier.php");
 add_package_tabs("Zerotier", $tab_array);
 display_top_tabs($tab_array);
 
-if (!is_service_running("zerotier")) {
-    print('<div class="alert alert-warning" role="alert"><strong>Zerotier</strong> service is not running.</div>');
+if (!is_array($config['installedpackages']['zerotier'])) {
+	$config['installedpackages']['zerotier'] = array();
+}
+
+if (!is_array($config['installedpackages']['zerotier']['config'])) {
+    $config['installedpackages']['zerotier']['config'] = array();
 }
 
 if($_POST['save']) {
-
     if(isset($_POST['enable'])) {
-        $config['installedpackages']['zerotier']['config'][0]['enable'] = $_POST['enable'];
+        $config['installedpackages']['zerotier']['config'][0]['enable'] = 'yes';
+
+        zerotier_start();
     }
     else {
-        unset($config['installedpackages']['zerotier']['config'][0]['enable']);
+        $config['installedpackages']['zerotier']['config'][0]['enable'] = NULL;
+
+        zerotier_kill();
     }
 
     if(isset($_POST['enableExperimental'])) {
-        $config['installedpackages']['zerotier']['config'][0]['experimental'] = $_POST['enableExperimental'];
+        $config['installedpackages']['zerotier']['config'][0]['experimental'] = 'yes';
     }
     else {
-        unset($config['installedpackages']['zerotier']['config'][0]['experimental']);
+        $config['installedpackages']['zerotier']['config'][0]['experimental'] = NULL;
     }
-
+  
     write_config(gettext("Update enable Zerotier."));
-    if (!isset($_POST['enable'])) {
-        zerotier_kill();
-    }
-    else {
-        if (!is_service_running("zerotier")) {
-            start_service("zerotier");
-        }
-    }
+
     header("Location: zerotier.php");
 }
 
+if ($config['installedpackages']['zerotier']['config'][0]['enable'] != 'yes' || !is_service_running("zerotier")) {
+    print_info_box(gettext("The Zerotier service is not running."), "warning", false);
+}
+
+
 $enable['mode'] = $config['installedpackages']['zerotier']['config'][0]['enable'];
 $enable['experimental'] = $config['installedpackages']['zerotier']['config'][0]['experimental'];
+
+if ($config['installedpackages']['zerotier']['config'][0]['enable'] == 'yes' && is_service_running("zerotier")) {
+    $status = zerotier_status();
+}
+?>
+<div class="panel panel-default">
+	<div class="panel-heading"><h2 class="panel-title">Address: <?php print($status->address); ?></h2></div>
+	<div class="panel-body">
+		<dl class="dl-horizontal">
+        <dt><?php print(gettext("Version")); ?><dt><dd><?php print($status->version) ?></dd>
+        </dl>
+    </div>
+</div>
+
+<?php
 
 $form = new Form();
 $section = new Form_Section('Enable Zerotier');

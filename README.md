@@ -1,9 +1,19 @@
 # pfSense-pkg-zerotier
 pfSense package to support zerotier.
 
+## Pre-reqs
+1. FreeBSD 11.2 Workstation with pkg, git, and gmake
+
+## Build
+1. `git clone https://github.com/pfsense/FreeBSD-ports.git`
+2. Copy these files to FreeBSD-ports/net/pfSense-pkg-zerotier
+3. Run `make clean ; make package`
+3. scp work/pkg/pfSense-pkg-zerotier-0.00.1.txz to pfsense
+
 ## Install
-1. Build [zerotier](https://github.com/zerotier/ZeroTierOne) dev branch.
-2. Copy these files and build on FreeBSD.
-3. SCP to pfSense
-4. Run `pkg add pfsense-pkg-zerotier-1.0.txz`
-5. Run `Service zerotier start`
+1. Run `pkg add http://pkg.freebsd.org/freebsd:11:x86:64/latest/All/zerotier-1.4.6.txz`
+2. Run `pkg add pfsense-pkg-zerotier-1.0.txz`
+
+## ToDo
+- [ ] Re-write controller functionality to match API changes
+- [ ] Interface creation
