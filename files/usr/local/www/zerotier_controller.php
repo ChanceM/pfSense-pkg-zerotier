@@ -3,26 +3,6 @@ require_once("config.inc");
 require_once("guiconfig.inc");
 require_once("zerotier.inc");
 
-function get_status_label($status) {
-    $label = '';
-    switch ($status) {
-        case 'OK':
-            $label = 'success';
-            break;
-        case 'ACCESS_DENIED':
-            $label = 'danger';
-            break;
-        case 'PORT_ERROR':
-            $label = 'warning';
-            break;
-        default:
-            $label = 'default';
-            break;
-    }
-
-    return $label;
-}
-
 function translate_v4AssignMode($index) {
     $modes = ['zt'];
 
@@ -78,15 +58,17 @@ if ($_POST['save']) {
 
     if (!isset($_POST['allowAnyProtocol'])) {
         if (isset($_POST['AllowIPv4'])) {
-            $zerotier_network['rules'][] = ['ruleNo' => sizeof($zerotier_network['rules']) + 1, 'etherType' => 2048, 'action' => 'accept'];
-            $zerotier_network['rules'][] = ['ruleNo' => sizeof($zerotier_network['rules']) + 1, 'etherType' => 2054, 'action' => 'accept'];
+            $zerotier_network['rules'][] = (object)['etherType' => 2048, 'not' => true, 'or' => false, 'type' => 'MATCH_ETHERTYPE'];
+            $zerotier_network['rules'][] = (object)['etherType' => 2054, 'not' => true, 'or' => false, 'type' => 'MATCH_ETHERTYPE'];
+            $zerotier_network['rules'][] = (object)[ 'type' => 'ACTION_ACCEPT'];
         }
         if (isset($_POST['AllowIPv6'])) {
-            $zerotier_network['rules'][] = ['ruleNo' => sizeof($zerotier_network['rules']) + 1, 'etherType' => 34525, 'action' => 'accept'];
+            $zerotier_network['rules'][] = (object)['etherType' => 34525, 'not' => true, 'or' => false, 'type' => 'MATCH_ETHERTYPE'];
+            $zerotier_network['rules'][] = (object)[ 'type' => 'ACTION_ACCEPT'];
         }
     }
     else {
-        $zerotier_network['rules'][] = ['ruleNo' => sizeof($zerotier_network['rules']) + 1, 'action' => 'accept'];
+        $zerotier_network['rules'][] = (object)[ 'type' => 'ACTION_ACCEPT'];
     }
 
     if ($zerotier_network['v4AssignMode'] == 'zt') {
@@ -105,6 +87,7 @@ if ($_POST['save']) {
     }
 
     $out = zerotier_controller_createnetwork($zerotier_network, $id);
+    
     header("Location: zerotier_controller.php");
     exit;
 }
@@ -254,8 +237,8 @@ else:
             <tbody>
                 <?php
                     $networks = zerotier_controller_listnetworks();
-                    // $networks = [];
-                    // print_r($networks);
+                    //   $networks = [];
+                    //  print_r($networks);
                     foreach($networks as $network) {
                 ?>
                     <tr>

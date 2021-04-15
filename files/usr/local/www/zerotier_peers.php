@@ -2,22 +2,6 @@
 require_once("guiconfig.inc");
 require_once("zerotier.inc");
 
-function get_status_label($status) {
-    $label = '';
-    switch ($status) {
-        case 'OK':
-            $label = 'success';
-            break;
-        case 'ACCESS_DENIED':
-            $label = 'danger';
-            break;
-        default:
-            $label = 'default';
-            break;
-    }
-
-    return $label;
-}
 function sort_roles($a, $b) {
     if($a->role == $b->role){ return 0 ; }
 	return ($a->role < $b->role) ? 1 : -1;

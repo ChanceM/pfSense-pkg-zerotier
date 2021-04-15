@@ -3,23 +3,6 @@ require_once("config.inc");
 require_once("guiconfig.inc");
 require_once("zerotier.inc");
 
-function get_status_label($status) {
-    $label = '';
-    switch ($status) {
-        case 'OK':
-            $label = 'success';
-            break;
-        case 'ACCESS_DENIED':
-            $label = 'danger';
-            break;
-        default:
-            $label = 'default';
-            break;
-    }
-
-    return $label;
-}
-
 $pgtitle = array(gettext("VPN"), gettext("Zerotier"), gettext("Configuration"));
 $pglinks = array("", "pkg_edit.php?xml=zerotier.xml", "@self");
 require("head.inc");

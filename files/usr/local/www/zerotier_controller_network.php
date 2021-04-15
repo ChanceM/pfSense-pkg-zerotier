@@ -3,27 +3,6 @@ require_once("config.inc");
 require_once("guiconfig.inc");
 require_once("zerotier.inc");
 
-
-function get_status_label($status) {
-    $label = '';
-    switch ($status) {
-        case 'OK':
-            $label = 'success';
-            break;
-        case 'ACCESS_DENIED':
-            $label = 'danger';
-            break;
-        case 'PORT_ERROR':
-            $label = 'warning';
-            break;
-        default:
-            $label = 'default';
-            break;
-    }
-
-    return $label;
-}
-
 function get_enabled_icon($value) {
     $icon = "";
 
@@ -171,10 +150,13 @@ else:
         <dt><?php print(gettext("Type")); ?><dt><dd><?php print($network->private) == TRUE ? 'Private' : 'Public' ?></dd>
         <dt><?php print(gettext("Broadcast Enabled")); ?><dt><dd><?php print($network->enableBroadcast) ? 'Yes' : 'No' ?></dd>
         <dt><?php print(gettext("Multicast Limit")); ?><dt><dd><?php print($network->multicastLimit) ?></dd>
-        <dt><?php print(gettext("Acvite Members")); ?><dt><dd><?php print($network->activeMemberCount) ?></dd>
-        <dt><?php print(gettext("Authorized Members")); ?><dt><dd><?php print($network->authorizedMemberCount) ?></dd>
-        <dt><?php print(gettext("Total Members")); ?><dt><dd><?php print($network->totalMemberCount) ?></dd>
-        <dt><?php print(gettext("IP Pools")); ?><dt><dd><?php print($network->ipAssignmentPools) ?></dd>
+        <dt><?php print(gettext("IP Pools")); ?><dt><dd>
+        <?php foreach($network->ipAssignmentPools as $pool) {?>
+            <?php print($pool->ipRangeStart) ?> &mdash; <?php print($pool->ipRangeEnd) ?> <br>
+        <?php
+            }
+        ?>
+        </dd>
         </dl>
     </div>
 </div>
@@ -230,10 +212,12 @@ else:
     </div>
 </div>
 <nav class="action-buttons">
-    <!-- [TODO] Post should have confirmation message -->
-    <a href="zerotier_controller.php?act=del&amp;Network=<?=$network->id;?>" title="<?=gettext('Remove Network')?>" class="confirm btn btn-sm btn-danger" usepost>
-        <i class="fa fa-trash icon-embed-btn"></i> Delete
-    </a>
+    <form action="zerotier_controller.php?act=del" method="post">
+        <input type="hidden" name="Network" id="Network" value="<?=$network->id?>">
+        <button type="submit" title="<?=gettext('Remove Network')?>" class="confirm btn btn-sm btn-danger">
+            <i class="fa fa-trash icon-embed-btn"></i> Delete
+        </button>
+    </form>
 </nav>
 <?php
 endif;

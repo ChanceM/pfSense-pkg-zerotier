@@ -192,7 +192,7 @@ function zerotier_controller_createnetwork($network, $networkID) {
 		exec("/usr/local/bin/zerotier-cli -j /status", $json);
 		$status = json_decode(implode('', $json));
 		$controller_id = $status->address;
-		$network_id = $controller_id.networkID;
+		$network_id = $controller_id.$networkID;
 		$post_data = json_encode($network);
 		$curl = curl_init("http://localhost:9993/controller/network/".$network_id);
 		curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
@@ -299,5 +299,35 @@ function zerotier_controller_member_toggle($network, $member, $key) {
 		$output[] = json_decode($response);
 	}
 	return $output;
+}
+
+// Helper Functions
+
+
+/**
+ * get_status_class
+ *
+ * @param  string $status
+ * @return string
+ */
+function get_status_class(string $status) : string {
+    $label = '';
+    switch ($status) {
+        case 'OK':
+            $label = 'success';
+            break;
+        case 'ACCESS_DENIED':
+        case 'NOT_FOUND':
+            $label = 'danger';
+            break;
+        case 'REQUESTING_CONFIGURATION':
+            $label = 'info';
+            break;
+        default:
+            $label = 'default';
+            break;
+    }
+
+    return $label;
 }
 ?>

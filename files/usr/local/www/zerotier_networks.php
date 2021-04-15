@@ -2,27 +2,6 @@
 require_once("guiconfig.inc");
 require_once("zerotier.inc");
 
-function get_status_label($status) {
-    $label = '';
-    switch ($status) {
-        case 'OK':
-            $label = 'success';
-            break;
-        case 'ACCESS_DENIED':
-        case 'NOT_FOUND':
-            $label = 'danger';
-            break;
-        case 'REQUESTING_CONFIGURATION':
-            $label = 'info';
-            break;
-        default:
-            $label = 'default';
-            break;
-    }
-
-    return $label;
-}
-
 $pgtitle = array(gettext("VPN"), gettext("Zerotier"), gettext("Networks"));
 $pglinks = array("", "pkg_edit.php?xml=zerotier.xml", "@self");
 require("head.inc");
@@ -118,7 +97,7 @@ else:
                 ?>
                     <tr>
                         <td>
-                            <span class="label label-<?php print(get_status_label($network->status)); ?>"><?php print($network->status); ?></span>
+                            <span class="label label-<?php print(get_status_class($network->status)); ?>"><?php print($network->status); ?></span>
                         </td>
                         <td><?php print($network->id); print("<br />"); print("<strong>".$network->name."</strong>"); ?></td>
                         <td><?php print($network->type); ?></td>
