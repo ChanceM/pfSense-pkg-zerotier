@@ -12,7 +12,7 @@ pfSense package to support zerotier.
 5. scp work/pkg/pfSense-pkg-zerotier-0.00.1.txz to pfsense
 
 ## Install
-1. Run `pkg add http://pkg.freebsd.org/freebsd:12:x86:64/latest/All/zerotier-1.6.6.txz`
+1. Run `pkg add http://pkg.freebsd.org/freebsd:12:x86:64/latest/All/zerotier-1.8.3.txz`
 2. Run `pkg add pfsense-pkg-zerotier-0.00.1.txz`
 
 ## ToDo
