@@ -16,7 +16,7 @@ add_package_tabs("Zerotier", $tab_array);
 display_top_tabs($tab_array);
 
 if (!is_array($config['installedpackages']['zerotier'])) {
-	$config['installedpackages']['zerotier'] = array();
+    $config['installedpackages']['zerotier'] = array();
 }
 
 if (!is_array($config['installedpackages']['zerotier']['config'])) {
@@ -60,9 +60,9 @@ if ($config['installedpackages']['zerotier']['config'][0]['enable'] == 'yes' && 
 }
 ?>
 <div class="panel panel-default">
-	<div class="panel-heading"><h2 class="panel-title">Address: <?php print($status->address); ?></h2></div>
-	<div class="panel-body">
-		<dl class="dl-horizontal">
+    <div class="panel-heading"><h2 class="panel-title">Address: <?php print($status->address); ?></h2></div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
         <dt><?php print(gettext("Version")); ?><dt><dd><?php print($status->version) ?></dd>
         </dl>
     </div>

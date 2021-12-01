@@ -69,8 +69,8 @@ function zerotier_deinstall() {
 	$file_contents = file_get_contents("/etc/inc/util.inc");
 	$file_contents = preg_replace('/\^zt\|(\^enc\|)/', "$1", $file_contents);
 	file_put_contents("/etc/inc/util.inc", $file_contents);
-
 	unlink_if_exists('/usr/local/etc/rc.d/zerotier.sh');
+
 }
 
 function zerotier_kill() {
@@ -300,9 +300,33 @@ function zerotier_controller_member_toggle($network, $member, $key) {
 	}
 	return $output;
 }
+// Interface Functions
+
+function zt_get_pfsense_interface_info($portDeviceName): pfInterface {
+	$ifList = get_configured_interface_list_by_realif(true);
+	$ifDesc = get_configured_interface_with_descr(true);
+
+	if($ifList[$portDeviceName]) {
+		return new pfInterface($ifList[$portDeviceName], $ifDesc[$ifList[$portDeviceName]]); 
+	}
+	else {
+		return new pfInterface();
+	}
+
+}
+
+class pfInterface {
+	public $interface;
+	public $description;
+
+	public function __construct(string $interface = "", string $description = "")
+	{
+		$this->interface = $interface;
+		$this->description = $description;
+	}
+}
 
 // Helper Functions
-
 
 /**
  * get_status_class

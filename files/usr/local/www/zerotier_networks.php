@@ -86,12 +86,15 @@ else:
                     <th><?=gettext("Network")?></th>
                     <th><?=gettext("Type")?></th>
                     <th><?=gettext("Addresses")?></th>
+                    <th><?=gettext("Interface")?></th>
                     <th><?=gettext("Bridged")?></th>
                     <th><?=gettext("Actions")?></th>
                 </tr>
             </thead>
             <tbody>
                 <?php
+                   
+                    
                     $networks = zerotier_listnetworks();
                     foreach($networks as $network) {
                 ?>
@@ -102,6 +105,20 @@ else:
                         <td><?php print($network->id); print("<br />"); print("<strong>".$network->name."</strong>"); ?></td>
                         <td><?php print($network->type); ?></td>
                         <td><?php print(implode('<br/>',array_reverse($network->assignedAddresses))); ?></td>
+                        <td>
+                            <?php
+                                if (empty(zt_get_pfsense_interface_info($network->portDeviceName)->interface)) {
+                            ?>
+                                <a href="/interfaces_assign.php"><i class="fas fa-ethernet" style="vertical-align: middle;"></i> <strong>Interface Assignments</strong><br><?php print($network->portDeviceName); ?></a>
+                            <?php 
+                                } 
+                                else {
+                            ?>
+                                <a href="/interfaces.php?if=<?php print(zt_get_pfsense_interface_info($network->portDeviceName)->interface); ?>"><i class="fas fa-ethernet" style="vertical-align: middle;"></i> <strong><?php print(strtoupper(zt_get_pfsense_interface_info($network->portDeviceName)->interface)); ?></strong><br><?php print($network->portDeviceName); ?></a>
+                            <?php 
+                                }
+                            ?>
+                        </td>
                         <td><?php print($network->bridge ? "Yes" : "No"); ?></td>
                         <td>
                             <a href="?act=edit&amp;Network=<?=$network->id;?>" class="fa fa-pencil" title="<?=gettext('Edit Network')?>"></a>
