@@ -12,8 +12,19 @@ pfSense package to support zerotier.
 5. scp work/pkg/pfSense-pkg-zerotier-0.00.1.txz to pfsense
 
 ## Install
-1. Run `pkg add http://pkg.freebsd.org/freebsd:12:x86:64/latest/All/zerotier-1.8.6.txz`
+1. Run `pkg add https://pkg.freebsd.org/FreeBSD:12:amd64/latest/All/zerotier-1.10.1.pkg`
 2. Run `pkg add pfsense-pkg-zerotier-0.00.1.txz`
+
+
+## Alternative Package Install
+If you find that the download, and compile times to be too long to wait. @tuxpowered compiled the package for amd64/x86_64 systems and is available here:
+
+[Release 0.00.1](https://github.com/tuxpowered/pfSense-pkg-zerotier/releases)
+
+```
+pkg add https://pkg.freebsd.org/FreeBSD:12:amd64/latest/All/zerotier-1.10.1.pkg
+pkg add https://github.com/tuxpowered/pfSense-pkg-zerotier/releases/download/0.00.1/pfSense-pkg-zerotier-0.00.1.pkg
+```
 
 ## ToDo
 - [ ] Re-write controller functionality to match API changes
